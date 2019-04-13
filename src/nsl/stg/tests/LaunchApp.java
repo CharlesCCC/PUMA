@@ -1542,18 +1542,38 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 
 		// 3. Select scrollable "container view" 
 		UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
+
+		int maxSearchSwipes = appViews.getMaxSearchSwipes();
 		// Set the swiping mode to horizontal (the default is vertical)
 		appViews.setAsHorizontalList();
 
 		// 4. This API does not work properly in 4.2.2 
 		appViews.scrollTextIntoView(appName);
+		
+        // The following loop is to workaround a bug in Android 4.2.2 which
+        // fails to scroll more than once into view.
+        for (int i = 0; i < maxSearchSwipes; i++) {
+            try {
+        		// 5. Click target app
+        		UiObject targetApp = appViews.getChildByText(new UiSelector().className(android.widget.TextView.class.getName()), appName, true);
 
-		// 5. Click target app
-		UiObject targetApp = appViews.getChildByText(new UiSelector().className(android.widget.TextView.class.getName()), appName, true);
+                if (targetApp != null) {
+                    // Create a UiSelector to find the Settings app and simulate      
+                    // a user click to launch the app.
+            		boolean done = targetApp.clickAndWaitForNewWindow();
+            		// Util.log("clickAndWaitForNewWindow: " + done);
+                    break;
+                }
+            } catch (UiObjectNotFoundException e) {
+                System.out.println("Did not find match for " + e.getLocalizedMessage());
+            }
 
-		boolean done = targetApp.clickAndWaitForNewWindow();
-		// Util.log("clickAndWaitForNewWindow: " + done);
-
+            for (int j = 0; j < i; j++) {
+                appViews.scrollForward();
+                System.out.println("scrolling forward 1 page of apps.");
+            }
+        }
+        
 		waitForNetworkUpdate();
 		// AccessibilityEventProcessor.waitForLastEvent(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED, WINDOW_CONTENT_UPDATE_TIMEOUT);
 	}
