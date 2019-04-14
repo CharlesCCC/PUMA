@@ -21,6 +21,29 @@ To run the "app under study", you need to find out the package name and text lab
 Note that PUMA is currently instantiated for Android platform and only tested on Ubuntu machine (12.04), Android 4.3. Users may require proper Android development environment setup before using PUMA. We are adding some automated procedure to check such environment before running PUMA.
 
 
+## Some Useful adb tips
+Note: You will have to have SDK in your path before you can call `adb` command
+
+Show list of devices and its id 
+
+`adb devices`
+
+Perform any action against specific device (USB or Emulator) Not needed if only one device connected:
+
+`adb -s {deviceID} [Action]`
+
+install package using adb 
+
+`adb -s {deviceID} install /paht/to/something.apk` 
+
+list all installed packages for some device
+
+`adb -s {deviceID} shell pm list packages`
+
+uninstall certain packages
+
+`adb -s {deviceID} shell pm uninstall com.example.package`
+
 
 [0]:https://github.com/CharlesCCC/PUMA.git
 [1]:https://github.com/CharlesCCC/PUMA/blob/master/project.properties#L17
