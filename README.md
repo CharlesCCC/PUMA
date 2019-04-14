@@ -11,6 +11,8 @@ PUMA was developed by Shuai Hao in collaboration with Bin Liu, William G.J. Half
 - Update your local SDK with some legacy dependcy. 
   - copy everything from this [Folder][2] to your SDK location `/Users/{UserName}/Library/Android/sdk/tools`
 - Make sure your SDK have Android SDK 18 installed 
+- After succesfully get everything configured. you should able to using Eclipse's "add ant build by search" function to add all the existing `build.xml` build method to the `Ant` build tool window. 
+- Then you will need run `clean`, `compile` and `build` under the `Ant` tool window. 
 
 To run the "app under study", you need to find out the package name and text label for the app. e.g. ```com.abc.apk``` will have ```com.abc``` as package name. "label" will be the text shown after installing it on phone.
 
