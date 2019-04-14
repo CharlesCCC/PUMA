@@ -4,7 +4,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
@@ -20,5 +19,5 @@ src/nsl/stg/.DS_Store
 .project
 
 #config files
-.properties
-.info
+*.properties
+*.info
