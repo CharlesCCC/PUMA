@@ -18,3 +18,7 @@ src/nsl/stg/.DS_Store
 /bin/
 .classpath
 .project
+
+#config files
+.properties
+.info
