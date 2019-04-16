@@ -8,8 +8,9 @@ PUMA was developed by Shuai Hao in collaboration with Bin Liu, William G.J. Half
 - First of all, environment variables like ```JAVA_HOME``` and ```ANDROID_HOME``` should be set up properly.
 - Downalod latest Eclipse and then Import the Project (clone this [repo][0] to your locally)
 - Make sure the following [line][1] is configured point to your local SDK location
+ - sdk.dir=C:/Users/{username}/AppData/Local/Android/Sdk
 - Update your local SDK with some legacy dependcy. 
-  - copy everything from this [Folder][2] to your SDK location `/Users/{UserName}/Library/Android/sdk/tools`
+ - copy everything from this [Folder][2] to your SDK location `/Users/{UserName}/Library/Android/sdk/tools`
 - Make sure your SDK have Android SDK 18 installed 
 - After succesfully get everything configured. you should able to using Eclipse's "add ant build by search" function to add all the existing `build.xml` build method to the `Ant` build tool window. 
 - Then you will need run `clean`, `compile` and `build` under the `Ant` tool window. 
