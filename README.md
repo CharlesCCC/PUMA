@@ -8,6 +8,7 @@ PUMA was developed by Shuai Hao in collaboration with Bin Liu, William G.J. Half
 - First of all, environment variables like ```JAVA_HOME``` and ```ANDROID_HOME``` should be set up properly.
 - Downalod latest Eclipse and then Import the Project (clone this [repo][0] to your locally)
 - Make sure the following [line][1] is configured point to your local SDK location
+  - For Windows sdk.dir=C:/Users/{username}/AppData/Local/Android/Sdk
 - Update your local SDK with some legacy dependcy. 
   - copy everything from this [Folder][2] to your SDK location `/Users/{UserName}/Library/Android/sdk/tools`
 - Make sure your SDK have Android SDK 18 installed 
