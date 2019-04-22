@@ -38,6 +38,7 @@ import nsl.stg.uiautomator.core.MyAccessibilityNodeInfoHelper;
 import nsl.stg.uiautomator.core.MyInteractionController;
 import nsl.stg.uiautomator.core.MyUiDevice;
 import nsl.stg.uiautomator.testrunner.MyUiAutomatorTestCase;
+import nsl.stg.users.MonkeyInputFactory;
 import android.app.UiAutomation.OnAccessibilityEventListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -83,7 +84,7 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 		dev = getMyUiDevice();
 		bridge = dev.getUiAutomatorBridge();
 
-		final String appPackageName = "com.chenio.android.sixpark";
+		final String appPackageName = "com.aviary.android.feather";
 		final String fn = "/sdcard/haos/events.log";
 		Util.openFile(fn, true);
 
@@ -151,8 +152,13 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 		// IMPORTANT: NOT WORKING ON EMULATOR
 		// dev.takeScreenshot(new File("/sdcard/haos/" + packName + ".png"), 0.5f, 90);
 		takeScreenshot("/sdcard/screen-app.png");
-
-		String currPackName = dev.getCurrentPackageName();
+		String currPackName = null;
+		try{
+			currPackName = dev.getCurrentPackageName();
+		}catch (Exception e) {
+			Util.log(e);
+		}
+		
 		if (currPackName == null) {
 			Util.log("FAIL," + packName + ",NULL");
 		} else {
@@ -192,7 +198,30 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 		}
 	}
 
-	public void _testAfa() {
+	public void _testAfa() throws UiObjectNotFoundException {
+		// 0. get pointer to the important objects
+		dev = getMyUiDevice();
+		bridge = dev.getUiAutomatorBridge();
+		controller = new MyInteractionController(bridge);
+		loadAppInfo();
+
+		// 0.5 intercept all events
+		dev.getUiAutomation().setOnAccessibilityEventListener(new OnAccessibilityEventListener() {
+			public void onAccessibilityEvent(AccessibilityEvent event) {
+				CharSequence pack_name = event.getPackageName();
+				// only process related events
+				if (pack_name != null && pack_name.equals(packName)) {
+					AccessibilityEventProcessor.process(event);
+				} else {
+					// ignore the rest: e.g. notification etc
+					// Util.err("UNKNOWN EVENT fromIndex " + pack_name);
+				}
+			}
+		});
+
+		// 1. START
+		start_target_app();
+		
 		Util.log(UIState.DUMMY_3RD_PARTY_STATE.dumpShort());
 		Util.log(ExplorationState.DUMMY_3RD_PARTY_STATE.dumpShort());
 	}
@@ -231,7 +260,7 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 
 		long startTimeMillis = SystemClock.uptimeMillis();
 		long currTimeMillis;
-		final long TIMEOUT = 1200000; // 20 mins
+		final long TIMEOUT = 600000; // 20 mins
 
 		while (!finalDone) {
 			currTimeMillis = SystemClock.uptimeMillis();
@@ -398,7 +427,7 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 		}
 
 		Util.log("========================================");
-		Util.log("Total UIState clusters: " + sManager.dumpShort());
+		Util.log("Appname," + appName + ",Package," + packName + ","+ "Total UIState clusters," +  sManager.dumpShort());
 		Util.log(sManager);
 
 		Util.log("Total ExplorationStates: " + eManager.dumpShort());
@@ -1549,7 +1578,11 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 
 		// 4. This API does not work properly in 4.2.2 
 		appViews.scrollTextIntoView(appName);
-		
+		long startTimeMillis = SystemClock.uptimeMillis();
+		long currTimeMillis;
+		final long TIMEOUT = 3000; 
+		final long TIMEOUTMAIN = 12000; 
+
         // The following loop is to workaround a bug in Android 4.2.2 which
         // fails to scroll more than once into view.
         for (int i = 0; i < maxSearchSwipes; i++) {
@@ -1567,11 +1600,22 @@ public class LaunchApp extends MyUiAutomatorTestCase {
             } catch (UiObjectNotFoundException e) {
                 System.out.println("Did not find match for " + e.getLocalizedMessage());
             }
-
+            
             for (int j = 0; j < i; j++) {
                 appViews.scrollForward();
                 System.out.println("scrolling forward 1 page of apps.");
+    			currTimeMillis = SystemClock.uptimeMillis();
+    			if (currTimeMillis - startTimeMillis > TIMEOUT) {
+    				Util.log("TIMEOUT");
+    				break;
+    			}
             }
+            
+			currTimeMillis = SystemClock.uptimeMillis();
+			if (currTimeMillis - startTimeMillis > TIMEOUTMAIN) {
+				Util.log("TIMEOUT");
+				break;
+			}
         }
         
 		waitForNetworkUpdate();
