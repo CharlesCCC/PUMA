@@ -27,6 +27,6 @@ for filename in "$folder"/*.apk; do
     # 0. Start app from fresh
     adb install "$filename"
 	adb shell "am force-stop $APP"
-	adb shell /data/local/tmp/haos runtest Test2.jar -c nsl.stg.tests.LaunchApp | grep "Total UIState clusters" >> results.log 
+	adb shell /data/local/tmp/haos runtest TestApp.jar -c nsl.stg.tests.LaunchApp | grep "Total UIState clusters" >> results.log 
 	adb shell pm uninstall $packageName 
 done
