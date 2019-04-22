@@ -84,7 +84,7 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 		dev = getMyUiDevice();
 		bridge = dev.getUiAutomatorBridge();
 
-		final String appPackageName = "com.aviary.android.feather";
+		final String appPackageName = "com.chenio.android.sixpark";
 		final String fn = "/sdcard/haos/events.log";
 		Util.openFile(fn, true);
 
@@ -198,30 +198,7 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 		}
 	}
 
-	public void _testAfa() throws UiObjectNotFoundException {
-		// 0. get pointer to the important objects
-		dev = getMyUiDevice();
-		bridge = dev.getUiAutomatorBridge();
-		controller = new MyInteractionController(bridge);
-		loadAppInfo();
-
-		// 0.5 intercept all events
-		dev.getUiAutomation().setOnAccessibilityEventListener(new OnAccessibilityEventListener() {
-			public void onAccessibilityEvent(AccessibilityEvent event) {
-				CharSequence pack_name = event.getPackageName();
-				// only process related events
-				if (pack_name != null && pack_name.equals(packName)) {
-					AccessibilityEventProcessor.process(event);
-				} else {
-					// ignore the rest: e.g. notification etc
-					// Util.err("UNKNOWN EVENT fromIndex " + pack_name);
-				}
-			}
-		});
-
-		// 1. START
-		start_target_app();
-		
+	public void _testAfa() {
 		Util.log(UIState.DUMMY_3RD_PARTY_STATE.dumpShort());
 		Util.log(ExplorationState.DUMMY_3RD_PARTY_STATE.dumpShort());
 	}
@@ -260,7 +237,7 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 
 		long startTimeMillis = SystemClock.uptimeMillis();
 		long currTimeMillis;
-		final long TIMEOUT = 600000; // 20 mins
+		final long TIMEOUT = 600000; // 10 mins
 
 		while (!finalDone) {
 			currTimeMillis = SystemClock.uptimeMillis();
