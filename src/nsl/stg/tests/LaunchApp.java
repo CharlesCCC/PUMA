@@ -404,10 +404,7 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 		}
 
 		Util.log("========================================");
-		Util.log("Appname," + appName + ",Package," + packName + ","+ "Total UIState clusters," +  sManager.dumpShort());
-		Util.log(sManager);
-
-		Util.log("Total ExplorationStates: " + eManager.dumpShort());
+		Util.log("Appname," + appName + ",Package," + packName + ",Total UIState clusters," +  sManager.dumpShort() + ", Clusters, " + sManager + ",Total ExplorationStates: ," + eManager.dumpShort());
 		Util.log("========================================");
 	}
 

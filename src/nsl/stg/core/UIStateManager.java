@@ -92,8 +92,8 @@ public class UIStateManager {
 		sb.append("{");
 
 		for (int i = 0; i < slist.size(); i++) {
-			UIState s = slist.get(i);
-			sb.append("  " + i + " " + s.dumpShort());
+			UIState uistate = slist.get(i);
+			sb.append("  " + i + " " + uistate.dumpShort());
 		}
 
 		sb.append("}");

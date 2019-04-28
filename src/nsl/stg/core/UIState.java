@@ -159,7 +159,7 @@ public class UIState {
 	}
 
 	public String dumpShort() {
-		return "[" + computeFeatureHash() + ", " + nextClickId + "/" + totClickables + "]";
+		return "[" + computeFeatureHash() + ":" + nextClickId + "/" + totClickables + "]";
 	}
 
 	public String toString() {
