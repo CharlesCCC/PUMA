@@ -74,6 +74,7 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 	private int uid; // used by network usage monitor
 	private final long WINDOW_CONTENT_UPDATE_PERIOD = 2000; // 2s
 	private final long WINDOW_CONTENT_UPDATE_TIMEOUT = 60000; // 60000; // 60s
+	private static long overallTraffic = 0;
 
 	private UIStateManager sManager = UIStateManager.getInstance();
 	private ExplorationStateManager eManager = ExplorationStateManager.getInstance();
@@ -404,7 +405,11 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 		}
 
 		Util.log("========================================");
-		Util.log("Appname," + appName + ",Package," + packName + ",Total UIState clusters," +  sManager.dumpShort() + ", Clusters, " + sManager + ",Total ExplorationStates: ," + eManager.dumpShort());
+		Util.log("Appname," + appName + ",Package," + packName + 
+				",Total UIState clusters," +  sManager.dumpShort() + 
+				",Clusters, " + sManager + 
+				",Total ExplorationStates: ," + eManager.dumpShort() +
+				",Total Traffic:," + overallTraffic);
 		Util.log("========================================");
 	}
 
@@ -587,6 +592,7 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 		}
 
 		if (idleDetected) {
+			overallTraffic += totTraffic;
 			Util.log("Traffic: " + totTraffic);
 		}
 	}
