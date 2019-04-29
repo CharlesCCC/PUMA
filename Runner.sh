@@ -17,7 +17,6 @@ adb -s "$deviceId" shell "mkdir -p /data/local/tmp/local/tmp"
 adb -s "$deviceId" push bin/TestApp.jar /data/local/tmp/
 
 total=$(find "$folder"/*.apk -type f | wc -l)
-mkdir "$folder"/processed
 
 for filename in "$folder"/*.apk; do
     var=$((var + 1))
@@ -28,10 +27,22 @@ for filename in "$folder"/*.apk; do
     echo $packageName >"$folder"/app.info
     echo $APP >> "$folder"/app.info
     adb -s "$deviceId" push "$folder"/app.info /data/local/tmp/
-    # 0. Start app from fresh
-    adb -s "$deviceId" install "$filename"
-	adb -s "$deviceId" shell "am force-stop $APP"
-	adb -s "$deviceId" shell /data/local/tmp/haos runtest TestApp.jar -c nsl.stg.tests.LaunchApp | grep "Total UIState clusters" >> results.log 
-	adb -s "$deviceId" shell pm uninstall $packageName 
-    mv $filename $folder/processed
+
+    if (adb -s "$deviceId" install "$filename") ; then
+        echo "$deviceId --- installed --- $filename"
+    	adb -s "$deviceId" shell "am force-stop $APP"
+    	adb -s "$deviceId" shell /data/local/tmp/haos runtest TestApp.jar -c nsl.stg.tests.LaunchApp | grep "Total UIState clusters" >> results.log 
+    else
+        break;
+        exit_on_error "can't install $filename on $deviceId ---- quit ---- " 
+	fi
+
+    if (adb -s "$deviceId" shell pm uninstall $packageName) ; then
+        mkdir -p "$folder"/processed
+        mv $filename "$folder"/processed
+        echo "$deviceId sucessfully uninstall $packageName "
+    else 
+        break;
+        exit_on_error "can't uninstall $packageName on $deviceId ---- quit ---- " 
+    fi
 done
