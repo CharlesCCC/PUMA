@@ -41,6 +41,7 @@ def check_collides(ads, clickables):
             ret += "Hit - ad "+str(ad)+", clickable "+str(c)+"\n"
    return ret
 
+
 def analyze_one(filename):
    global apps_with_ads, apps_total, apps_functional, hits, multiads
    f = open(folder_path+filename)
@@ -53,6 +54,7 @@ def analyze_one(filename):
    tmp = 0
    for line in f:
       if line.find("UI_LOAD_DONE") >= 0:
+         
          collide_str += check_collides(ads, clickables)
          state_count += 1
          total_ads += len(ads)
@@ -60,6 +62,7 @@ def analyze_one(filename):
             tmp = 1
          clickables = []
          ads = []
+         
       else:
          m = re.search(r'located at \((-?\d+),(-?\d+)\),\((-?\d+),(-?\d+)\)', line)
          rect = Rectangle(m.group(1),m.group(2),m.group(3),m.group(4))
@@ -75,7 +78,15 @@ def analyze_one(filename):
                
          else:
             print("ERROR- line invalid")
-      total_ads += len(ads)
+   
+   collide_str += check_collides(ads, clickables)
+   state_count += 1
+   total_ads += len(ads)
+   if len(ads) > 1:
+      tmp = 1
+   clickables = []
+   ads = []
+   
    if total_ads > 0:
       multiads += tmp
       print(filename)
