@@ -80,7 +80,6 @@ def analyze_one(filename):
             print("ERROR- line invalid")
    
    collide_str += check_collides(ads, clickables)
-   state_count += 1
    total_ads += len(ads)
    if len(ads) > 1:
       tmp = 1
