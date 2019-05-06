@@ -204,6 +204,44 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 		Util.log(ExplorationState.DUMMY_3RD_PARTY_STATE.dumpShort());
 	}
 
+	
+	public void list_all_webviews() {
+		if (root == null) {
+			Util.err("FATAL: root source is NULL");
+		}
+
+		List<AccessibilityNodeInfo> leaves = get_leaf_nodes(root);
+
+		for (int i = 0; i < leaves.size(); i++) {
+			AccessibilityNodeInfo leaf = leaves.get(i);
+			AccessibilityNodeInfo node = leaf;		String clsName = node.getClassName().toString();
+			Class EDITTEXT, B, WEBVIEW;
+			boolean matchedEditText = false;
+			boolean matchedWebView = false;
+
+			try {
+				B = Class.forName(clsName, false, this.getClass().getClassLoader());
+
+				WEBVIEW = Class.forName(WebView.class.getCanonicalName(), false, this.getClass().getClassLoader());
+				matchedWebView = WEBVIEW.isAssignableFrom(B);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			if (node.isVisibleToUser() && node.isClickable() && node.isEnabled())
+			{
+
+			    Rect nodeRect = new Rect();
+			    node.getBoundsInScreen(nodeRect);
+			    String bounds = "("+nodeRect.left+","+nodeRect.top+"),("+nodeRect.right+","+nodeRect.bottom+")";
+				if (matchedWebView) {
+					Util.log(">>>>Webview ad located at "+bounds);
+				} else {
+					Util.log(">>>>Other Clickable located at "+bounds);
+				}
+			}
+		}
+	}
+	
 	// ============================================================
 	// Entry method fromIndex TestRunner
 	public void testMain() throws UiObjectNotFoundException {
@@ -366,7 +404,8 @@ public class LaunchApp extends MyUiAutomatorTestCase {
 			}
 
 			// Time to signal UI_LOAD_DONE event
-			Util.log("UI_LOAD_DONE");
+			Util.log(">>>>UI_LOAD_DONE");
+			list_all_webviews();
 			// ============================
 			dev.dumpWindowHierarchy(packName + "_" + i + ".xml"); // default location "/data/local/tmp/local/tmp/*.xml"
 
